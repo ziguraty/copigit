@@ -5,6 +5,5 @@ _jinja_extensions:
     - cookiecutter.extensions.SlugifyExtension
 
 _tasks:
-  - "git init"
-  - "git add ."
-  - "git commit -m 'Initial commit'"
+  - command: "git init && git add . && git commit -m 'Initial commit'"
+    when: "{{ _copier_operation == 'copy' }}"
