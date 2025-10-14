@@ -1,9 +1,75 @@
 # Configurations
 _subdirectory: template
 _answers_file: .copigit_answers.yml
-_jinja_extensions:
-    - cookiecutter.extensions.SlugifyExtension
 
 _tasks:
+  - "echo {{ _folder_name }}"
   - command: "git init && git add . && git commit -m 'Initial commit'"
     when: "{{ _copier_operation == 'copy' }}"
+
+welcome_message:
+  type: str
+  help: |
+    🕵️  Welcome!
+
+    This copigit, copier, template helps you create a new git repository quickly
+    and with good practices from the start.
+
+    ──────────────────────────────────────────────
+    IMPORTANT RULES
+    ──────────────────────────────────────────────
+
+    1️⃣  Run the copier copy command outside your project folder.
+        Example:
+          mkdir my-project
+          cd my-project
+          copier copy gh:my-org/my-template new-project
+
+        📁  This ensures copigit can safely create the project structure
+          inside the new directory and also guarantees that the folder name
+          follows the validation rules shown below.
+
+        ❌  Don't run "copier copy ."
+        → In this case, copigit will detect the invalid destination
+          and throw an error before continuing.
+
+    2️⃣  Project directory name format:
+          • Only lowercase letters (a–z)
+          • Digits (0–9)
+          • Hyphens (-)
+          • Dots (.)
+
+        ✅  Valid:   my-project, data-tools, my.project
+        ❌  Invalid: MyProject, data_tools, project@1
+
+    3️⃣  Automatic validation:
+        copigit will stop and show an error if any rule is broken,
+        helping to keep all repositories consistent.
+
+    🚀  Once everything is ready, copigit will initialize a new git
+        repository and create your Initial commit automatically.
+
+    Press Enter to contine.
+  default: ''
+  secret: true
+  when: true
+
+
+# Hidden validation
+hidden_validation:
+  type: str
+  default: "{{ _copier_conf.dst_path | string }}"
+  when: "{{ not (_copier_conf.dst_path | string | regex_search('^[a-z0-9\\-.]+$')) }}"
+  validator: >-
+    {% set dst = _copier_conf.dst_path | string %}
+    {% if dst == '.' %}
+      You must run the copier copy command outside and not use the .
+    {% elif not (dst | regex_search('^[a-z0-9\\-]+$')) %}
+      The project_dir_name must contain only lowercase letters, digits, or hyphens.
+    {% endif %}
+
+project_name:
+    type: str
+    default: "{{ _copier_conf.dst_path | string }}"
+    help: |
+        What's your project's name?
