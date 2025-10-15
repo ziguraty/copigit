@@ -52,14 +52,14 @@ welcome_message:
     Press Enter to contine.
   default: ''
   secret: true
-  when: true
+  when: "{{ _copier_operation == 'copy' }}"
 
 
 # Hidden validation
 hidden_validation:
   type: str
   default: "{{ _copier_conf.dst_path | string }}"
-  when: "{{ not (_copier_conf.dst_path | string | regex_search('^[a-z0-9\\-.]+$')) }}"
+  when: "{{ _copier_operation == 'copy' and not (_copier_conf.dst_path | string | regex_search('^[a-z0-9\\-.]+$')) }}"
   validator: >-
     {% set dst = _copier_conf.dst_path | string %}
     {% if dst == '.' %}
