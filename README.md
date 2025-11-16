@@ -91,7 +91,7 @@ Would you like me to also **show what happens when Copier automatically suggests
 
 ## Contributing
 
-Contributions are welcome! Feel free to submit issues or pull requests to improve this template.
+Contributions are more than welcome! Feel free to submit issues or pull requests to improve this template.
 
 ## License
 
